@@ -1,0 +1,12 @@
+services:
+  server:
+    build: .
+    restart: always
+    depends_on:
+      - mysql
+    env_file: .env
+    ports:
+      - ${APP_PORT}:${APP_PORT}
+
+volumes:
+  mysql-data:
