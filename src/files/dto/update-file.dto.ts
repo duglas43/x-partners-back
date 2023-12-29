@@ -1,4 +1,8 @@
-import { PartialType } from '@nestjs/swagger';
-import { CreateFileDto } from './create-file.dto';
+import { IsString } from 'class-validator';
+import { ApiPropertyOptional } from '@nestjs/swagger';
 
-export class UpdateFileDto extends PartialType(CreateFileDto) {}
+export class UpdateFileDto {
+  @ApiPropertyOptional()
+  @IsString()
+  originalname: string;
+}

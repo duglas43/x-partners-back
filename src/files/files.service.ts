@@ -1,26 +1,49 @@
 import { Injectable } from '@nestjs/common';
-import { CreateFileDto } from './dto/create-file.dto';
-import { UpdateFileDto } from './dto/update-file.dto';
+import { InjectModel } from '@nestjs/mongoose';
+import { File } from './schemas/file.schema';
+import { Model } from 'mongoose';
+import { FileDto, UpdateFileDto, CreateFileDto } from './dto';
+import { join } from 'path';
+import fs from 'fs';
+import { Types } from 'mongoose';
+import { Express } from 'express';
 
 @Injectable()
 export class FilesService {
-  create(createFileDto: CreateFileDto) {
-    return 'This action adds a new file';
+  constructor(
+    @InjectModel(File.name) private readonly fileModel: Model<File>,
+  ) {}
+
+  async create(file: Express.Multer.File, dto: CreateFileDto) {
+    const createdFile = await this.fileModel.create({
+      filename: file.filename,
+      originalname: dto.originalname || file.originalname,
+      size: file.size,
+      mimetype: file.mimetype,
+    });
+    return new FileDto(createdFile);
   }
 
-  findAll() {
-    return `This action returns all files`;
+  async findAll() {
+    const files = await this.fileModel.find().exec();
+    return files.map((file) => new FileDto(file));
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} file`;
+  async findOne(id: Types.ObjectId) {
+    const file = await this.fileModel.findById(id).exec();
+    return new FileDto(file);
   }
 
-  update(id: number, updateFileDto: UpdateFileDto) {
-    return `This action updates a #${id} file`;
+  async remove(id: Types.ObjectId) {
+    const file = await this.fileModel.findById(id).exec();
+    fs.unlinkSync(join(__dirname, '..', '..', 'uploads-files', file.filename));
+    await file.deleteOne();
+    return new FileDto(file);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} file`;
+  async update(id: Types.ObjectId, dto: UpdateFileDto) {
+    const file = await this.fileModel.findById(id);
+    await file.updateOne(dto);
+    return new FileDto(file);
   }
 }

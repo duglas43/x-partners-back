@@ -1,14 +1,11 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { GENDER } from '../enums';
 import { HydratedDocument } from 'mongoose';
-import { Types } from 'mongoose';
 
 export type UserDocument = HydratedDocument<User>;
 
 @Schema()
 export class User {
-  _id: Types.ObjectId;
-
   @Prop()
   name: string;
 

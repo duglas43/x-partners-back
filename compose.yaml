@@ -2,6 +2,8 @@ services:
   server:
     build: .
     restart: always
+    volumes:
+      - upload-files:/app/upload-files
     depends_on:
       - mysql
     env_file: .env
@@ -9,4 +11,4 @@ services:
       - ${APP_PORT}:${APP_PORT}
 
 volumes:
-  mysql-data:
+  upload-files:
