@@ -8,14 +8,18 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './strategy';
 import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from 'src/users/schemas/user.schema';
+import { MulterConfigModule } from 'src/multer-config/multer-config.module';
+import { FilesModule } from 'src/files/files.module';
 
 @Module({
   imports: [
+    MulterConfigModule,
     UsersModule,
     PassportModule,
     JwtModule.register({}),
     ConfigModule,
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
+    FilesModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy],

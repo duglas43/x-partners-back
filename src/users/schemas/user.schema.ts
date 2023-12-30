@@ -1,6 +1,8 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { GENDER } from '../enums';
 import { HydratedDocument } from 'mongoose';
+import { File } from '../../files/schemas/file.schema';
+import * as mongoose from 'mongoose';
 
 export type UserDocument = HydratedDocument<User>;
 
@@ -35,8 +37,8 @@ export class User {
   })
   gender: string;
 
-  @Prop()
-  photo: string;
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'File' })
+  photo: File;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

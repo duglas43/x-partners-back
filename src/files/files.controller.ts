@@ -22,7 +22,6 @@ import {
   ApiParam,
 } from '@nestjs/swagger';
 import { FileDto, UpdateFileDto, CreateFileDto } from './dto';
-import { fileStorage } from './storage';
 import { UploadedFile } from '@nestjs/common';
 import { Types } from 'mongoose';
 import { ParseMongoIdPipe } from 'src/types';
@@ -37,15 +36,8 @@ export class FilesController {
   @Public()
   @Post()
   @ApiCreatedResponse({ type: FileDto })
-  @UseInterceptors(
-    FileInterceptor('file', {
-      storage: fileStorage,
-      limits: {
-        fileSize: 1024 * 1024 * 100,
-      },
-    }),
-  )
   @ApiConsumes('multipart/form-data')
+  @UseInterceptors(FileInterceptor('file'))
   @ApiBody({
     schema: {
       type: 'object',

@@ -10,6 +10,7 @@ import { JwtService } from '@nestjs/jwt';
 import { Model } from 'mongoose';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
+import { FilesService } from 'src/files/files.service';
 
 @Injectable()
 export class AuthService {
@@ -17,6 +18,7 @@ export class AuthService {
     @InjectModel(User.name) private userModel: Model<User>,
     private jwtService: JwtService,
     private configService: ConfigService,
+    private filesService: FilesService,
   ) {}
 
   async signUp(dto: SignUpDto) {
@@ -26,9 +28,11 @@ export class AuthService {
         `User with email ${dto.email} already exists`,
       );
     }
+    const createdFile = await this.filesService.create(dto.photo, {});
     const hashPassword = await bcrypt.hash(dto.password, 5);
     const user = await this.userModel.create({
       ...dto,
+      photo: createdFile._id,
       password: hashPassword,
     });
     const refresh_token = await this.signRefreshToken({

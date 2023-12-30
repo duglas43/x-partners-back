@@ -14,7 +14,7 @@ import { FilesModule } from './files/files.module';
     AuthModule,
     UsersModule,
     ConfigModule.forRoot(),
-    MongooseModule.forRoot('mongodb://localhost/x'),
+    MongooseModule.forRoot(process.env.MONGODB_URI),
     FilesModule,
   ],
   controllers: [AppController],

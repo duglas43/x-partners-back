@@ -10,5 +10,14 @@ services:
     ports:
       - ${APP_PORT}:${APP_PORT}
 
+  mongodb:
+    image: mongo:latest
+    env_file: .env
+    environment:
+      -MONGO_INITDB_ROOT_USERNAME: ${DB_USERNAME}
+      -MONGO_INITDB_ROOT_PASSWORD: ${DB_PASSWORD}
+      -MONGODB_DATABASE: ${DB_DATABASE}
+    ports:
+      - 27017:27017
 volumes:
   upload-files:

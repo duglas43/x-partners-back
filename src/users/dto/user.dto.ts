@@ -1,6 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { GENDER } from '../enums';
 import { Types } from 'mongoose';
+import { FileDto } from 'src/files/dto';
+import { File } from 'src/files/schemas/file.schema';
 
 export class UserDto {
   @ApiProperty({
@@ -23,8 +25,10 @@ export class UserDto {
   })
   gender: string;
 
-  @ApiProperty()
-  photo: string;
+  @ApiProperty({
+    type: FileDto,
+  })
+  photo: File;
 
   constructor(partial: Partial<UserDto>) {
     this._id = partial?._id;
@@ -32,6 +36,6 @@ export class UserDto {
     this.email = partial?.email;
     this.birthday = partial?.birthday;
     this.gender = partial?.gender;
-    this.photo = partial?.photo;
+    this.photo = new FileDto(partial?.photo);
   }
 }

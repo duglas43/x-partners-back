@@ -5,5 +5,5 @@ export class CreateFileDto {
   @ApiPropertyOptional()
   @IsOptional()
   @IsString()
-  originalname: string;
+  originalname?: string;
 }

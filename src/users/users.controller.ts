@@ -23,7 +23,7 @@ export class UsersController {
 
   @Get()
   @ApiOkResponse({ type: [UserDto] })
-  findAll() {
+  findAll(): Promise<UserDto[]> {
     return this.usersService.findAll();
   }
 
@@ -31,6 +31,12 @@ export class UsersController {
   @ApiOkResponse({ type: UserDto })
   findMe(@GetUser() user: UserDto) {
     return new UserDto(user);
+  }
+
+  @Get('/except-me')
+  @ApiOkResponse({ type: [UserDto] })
+  findAllExceptMe(@GetUser() user: UserDto) {
+    return this.usersService.findAllExceptMe(user);
   }
 
   @Get(':id')

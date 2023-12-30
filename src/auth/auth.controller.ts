@@ -1,5 +1,15 @@
-import { Controller, Post, Body, Req, Res } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Req,
+  Res,
+  ParseFilePipe,
+  UseInterceptors,
+  UploadedFile,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { SignInDto, SignUpDto, AccessDto } from './dto';
 import { Response, Request } from 'express';
 import { GetUser } from './decorator';
@@ -8,6 +18,7 @@ import {
   ApiCreatedResponse,
   ApiBadRequestResponse,
   ApiForbiddenResponse,
+  ApiConsumes,
 } from '@nestjs/swagger';
 import { Public } from './decorator/public.decorator';
 
@@ -22,11 +33,18 @@ export class AuthController {
     description: 'User with login ${dto.login} already exists',
   })
   @Post('signup')
+  @ApiConsumes('multipart/form-data')
+  @UseInterceptors(FileInterceptor('photo'))
   async signUp(
+    @UploadedFile(new ParseFilePipe({}))
+    photo: Express.Multer.File,
     @Body() dto: SignUpDto,
     @Res({ passthrough: true }) response: Response,
   ) {
-    const { refresh_token, access_token } = await this.authService.signUp(dto);
+    const { refresh_token, access_token } = await this.authService.signUp({
+      ...dto,
+      photo,
+    });
     response.cookie('refresh_token', refresh_token, {
       httpOnly: true,
     });

@@ -29,8 +29,6 @@ export class SignUpDto {
   @IsEnum(GENDER)
   gender: string;
 
-  @ApiProperty()
-  @IsString()
-  @IsNotEmpty()
-  photo: string;
+  @ApiProperty({ type: 'string', format: 'binary' })
+  photo: Express.Multer.File;
 }
