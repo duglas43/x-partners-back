@@ -21,10 +21,10 @@ export class FileDto {
   mimetype: string;
 
   constructor(model: Partial<FileDto>) {
-    this._id = model._id;
-    this.filename = model.filename;
-    this.originalname = model.originalname;
-    this.size = model.size;
-    this.mimetype = model.mimetype;
+    this._id = model?._id;
+    this.filename = model?.filename;
+    this.originalname = model?.originalname;
+    this.size = model?.size;
+    this.mimetype = model?.mimetype;
   }
 }

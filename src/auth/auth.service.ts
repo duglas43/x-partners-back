@@ -57,7 +57,7 @@ export class AuthService {
     if (!user) {
       throw new ForbiddenException('Incorrect email or password');
     }
-    const isCorrectPassword = bcrypt.compare(dto.password, user.password);
+    const isCorrectPassword = await bcrypt.compare(dto.password, user.password);
     if (!isCorrectPassword) {
       throw new ForbiddenException('Incorrect email or password');
     }

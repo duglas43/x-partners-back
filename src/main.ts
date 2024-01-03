@@ -4,6 +4,8 @@ import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import * as cookieParser from 'cookie-parser';
 import { ConfigService } from '@nestjs/config';
+import * as express from 'express';
+import * as path from 'path';
 import helmet from 'helmet';
 
 async function bootstrap() {
@@ -20,15 +22,15 @@ async function bootstrap() {
       whitelist: true,
     }),
   );
+  app.use(
+    '/files/file',
+    express.static(path.join(__dirname, '..', 'uploads-files')),
+  );
   if (configService.get('NODE_ENV') === 'development') {
     const config = new DocumentBuilder()
       .setTitle('Service desk API')
       .addBearerAuth({
-        description: `
-        Admin: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6ImFkbWluIiwic3ViIjoxLCJpYXQiOjE2OTM1NTU1MDUsImV4cCI6MTcyNTA5MTUwNX0.v4FOM6hYBKKmjdztVruCJDkoFeHrCKhF8VGbEdX9LXU
-        Engineer: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6ImVuZ2luZWVyIiwic3ViIjoyLCJpYXQiOjE2OTM1NTU1MzYsImV4cCI6MTcyNTA5MTUzNn0.2OvtbMT14ojDZOTYKW5t384CAbMah-22xnECb2vzv1c
-        Client: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6ImNsaWVudCIsInN1YiI6MywiaWF0IjoxNjkzNTU1NTcxLCJleHAiOjE3MjUwOTE1NzF9.9npcHMqv1mfZO2oRzmk-Z7zV_44rcGdPWGrL62JFm08
-        `,
+        description: ``,
         type: 'http',
       })
       .build();
